@@ -1,6 +1,6 @@
 import openpyxl as xl
 
-#Inreg.xlsx este fisierul cu instructiuni iar celelalte sunt fisiere ce vor fi generate
+#Inreg.xlsx este fisierul cu instructiuni iar celelalte sunt fisiere care vor fi generate
 wb_inreg = xl.load_workbook('1. Inreg.xlsx')
 wb_cana = xl.load_workbook('2. Cani - noi.xlsx')
 wb_mousepad = xl.load_workbook('3. Mousepaduri - noi.xlsx')
