@@ -1,1 +1,1 @@
-# Generar-fisiere-excel-produse
+# Generare-fisiere-excel-produse
