@@ -1,5 +1,6 @@
 import openpyxl as xl
 
+#Inreg.xlsx este fisierul cu instructiuni iar celelalte sunt fisiere ce vor fi generate
 wb_inreg = xl.load_workbook('1. Inreg.xlsx')
 wb_cana = xl.load_workbook('2. Cani - noi.xlsx')
 wb_mousepad = xl.load_workbook('3. Mousepaduri - noi.xlsx')
@@ -32,6 +33,7 @@ sablon_hcopii = wb_hcopii['Sablon']
 sheet_hbarbati = wb_hbarbati['Sheet1']
 sablon_hbarbati = wb_hbarbati['Sablon']
 
+#citim sabloanele folosite pentru generarea numelor produselor simple si numelor familiilor produselor variabile
 sablon_cana_txt = (sablon_cana.cell(2, 1)).value
 sablon_mousepad_txt = (sablon_mousepad.cell(2, 1)).value
 sablon_tcopii_numefam_txt = (sablon_tcopii.cell(2, 2)).value
@@ -40,21 +42,24 @@ sablon_tfemei_numefam_txt = (sablon_tfemei.cell(2, 2)).value
 sablon_hcopii_numefam_txt = (sablon_hcopii.cell(2, 2)).value
 sablon_hbarbati_numefam_txt = (sablon_hbarbati.cell(2, 2)).value
 
+#randul de unde incepe scrierea numelor pt produsele simple
 row_cana = 3
 row_mousepad = 3
 
-
+#functia de generare si scriere nume pt produsele simple
+#variabila row_fisier e pentru a sti de unde sa scrie urmatorul rand
 def nume_produs_simplu(row, sablon_nume, sheet_fisier, row_fisier):
     nume_final = sablon_nume.replace("taguri", (sheet_inreg.cell(row, 1)).value)
     sheet_fisier.cell(row_fisier, 5).value = nume_final
 
-
+#functia de generare si scriere nume produs si nume familie pt produsele variabile
 def produs_variabil(row, sablon_numefam, sablon_fisier, sheet_fisier):
     numefam_arr = ((sheet_inreg.cell(row, 1)).value).split(",")
     numefam_final = sablon_numefam.replace("taguri", numefam_arr[0])
     for row_sablon in range(2, sablon_fisier.max_row + 1):
         sablon_numeprodus = (sablon_fisier.cell(row_sablon, 1)).value
         nume_produs_final = sablon_numeprodus.replace("taguri", (sheet_inreg.cell(row, 1)).value)
+        #nu merge cu functia max_row - daca sterg randurile cand se genereaza fisierul se duce tot la finalul fisierului. Cumva tine minte ca a fost ceva informatie acolo
         #sheet_fisier.cell(sheet_fisier.max_row + 1, 5).value = nume_produs_final
         #sheet_fisier.cell(sheet_fisier.max_row, 10).value = numefam_final
         row_fisier = sheet_fisier.cell(2, 5).value
@@ -68,6 +73,7 @@ for row in range(2, sheet_inreg.max_row + 1):
         cell_value = (sheet_inreg.cell(row, col)).value
         if cell_value:
             if col == 2:
+                #asa arata la inceput codul fara functie
                 # cana_replace = sablon_cana_txt.replace("taguri", (sheet_inreg.cell(row, 1)).value)
                 # sheet_cana.cell(row_cana, 5).value = cana_replace
                 nume_produs_simplu(row, sablon_cana_txt, sheet_cana, row_cana)
@@ -77,6 +83,7 @@ for row in range(2, sheet_inreg.max_row + 1):
                 row_mousepad += 1
             elif col == 4:
                 produs_variabil(row, sablon_tcopii_numefam_txt, sablon_tcopii, sheet_tcopii)
+                #asa arata la inceput codul
                 #tcopii_numefam_arr = ((sheet_inreg.cell(row, 1)).value).split(",")
                 #tcopii_replace_numefam = sablon_tcopii_numefam_txt.replace("taguri", tcopii_numefam_arr[0])
                 #for row_tcopii_sablon in range(2, sablon_tcopii.max_row + 1):
@@ -94,14 +101,13 @@ for row in range(2, sheet_inreg.max_row + 1):
             elif col == 8:
                 produs_variabil(row, sablon_hbarbati_numefam_txt, sablon_hbarbati, sheet_hbarbati)
 
-
+#partea de aici ajuta ca daca rulam de mai multe ori codul ca sa-l testam sa suprascrie in acelasi loc
+#de asemeni dupa ce copiem datele din fisierele generate nu mai trebuie manual sa modificam valorile din casutele respective
 sheet_tcopii.cell(2, 5).value = 3
 sheet_tbarbati.cell(2, 5).value = 3
 sheet_tfemei.cell(2, 5).value = 3
 sheet_hcopii.cell(2, 5).value = 3
 sheet_hbarbati.cell(2, 5).value = 3
-
-
 
 wb_cana.save('2. Cani - noi.xlsx')
 wb_mousepad.save('3. Mousepaduri - noi.xlsx')
